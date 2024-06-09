@@ -55,10 +55,10 @@ jobs:
           key: ${{ secretes.SSH_PRIVATE_KEY }}
           username: ${{ secrets.USER }}
           envs: GITHUB_SHA
-        script: |
-          cd /root/cicdTest/
-          mkdir test
-#          sudo docker rm -f $(docker ps -qa)
-          sudo docker pull ${{ secrets.DOCKER_REPO }}
-#          docker-compose up -d
-#          docker image prune -f
+          script: |
+            cd /root/cicdTest/
+            mkdir test
+  #          sudo docker rm -f $(docker ps -qa)
+            sudo docker pull ${{ secrets.DOCKER_REPO }}
+  #          docker-compose up -d
+  #          docker image prune -f
