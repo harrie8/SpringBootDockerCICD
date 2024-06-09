@@ -52,7 +52,7 @@ jobs:
         id: deploy
         with:
           host: ${{ secrets.REMOTE_IP }}
-          key: ${{ secretes.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           username: ${{ secrets.USER }}
           envs: GITHUB_SHA
           script: |
