@@ -57,4 +57,5 @@ jobs:
           script: |
             cd /root/cicdTest/
             mkdir test
-            sudo docker pull ${{ secrets.DOCKER_REPO }}
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            docker pull ${{ secrets.DOCKER_REPO }}
