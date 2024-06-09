@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sppart.admin.main.productexhibition.domain.mapper.ProductExhibitionMapper">
+
+    <delete id="bulkDeleteByExhibitionIds">
+        <if test="exhibitionIds != null and !exhibitionIds.isEmpty()">
+            DELETE
+            FROM product_exhibition
+            <where>
+                AND exhibition_id IN
+                <foreach collection="exhibitionIds" item="exhibitionId" open="(" separator="," close=")">
+                    #{exhibitionId}
+                </foreach>
+            </where>
+        </if>
+    </delete>
+
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*)
+        FROM product_exhibition;
+    </select>
+
+    <insert id="bulkInsertByExhibitionId">
+        <if test="exhibitionId != null and productIds != null and !productIds.isEmpty()">
+            INSERT INTO product_exhibition(product_id, exhibition_id)
+            VALUES
+            <foreach collection="productIds" item="productId" open="(" close=")" separator="), (">
+                #{productId}, #{exhibitionId}
+            </foreach>
+        </if>
+    </insert>
+
+    <resultMap id="productExhibitionDto" type="com.sppart.admin.main.productexhibition.dto.ProductExhibitionDto">
+        <result column="product_id" property="productId"/>
+        <result column="exhibition_id" property="exhibitionId"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <select id="findByExhibitionId" resultMap="productExhibitionDto">
+        SELECT *
+        FROM product_exhibition
+        WHERE exhibition_id = #{exhibitionId};
+    </select>
+
+    <select id="findExhibitionHistoryOfProductByProductId"
+            resultType="com.sppart.admin.main.productexhibition.dto.ExhibitionHistoryOfProductDto">
+        SELECT exhi.exhibition_id AS exhibitionId,
+               exhi.title         AS exhibitionTitle,
+               exhi.status        AS exhibitionStatus
+        FROM product_exhibition AS pe
+                 INNER JOIN exhibition AS exhi ON exhi.exhibition_id = pe.exhibition_id
+        WHERE pe.product_id = #{productId}
+        ORDER BY exhi.start_date DESC;
+    </select>
+
+    <delete id="deleteByExhibitionId" parameterType="Long">
+        DELETE
+        FROM product_exhibition
+        WHERE exhibition_id = #{exhibitionId};
+    </delete>
+</mapper>

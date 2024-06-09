@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sppart.admin.main.member.domain.mapper.MemberMapper">
+    <select id="getAllMembers" resultType="com.sppart.admin.main.member.domain.entity.Member">
+        SELECT email,
+               name,
+               nickname,
+               profile,
+               gender,
+               email,
+               name,
+               nickname,
+               profile,
+               gender,
+               birth_year,
+               is_artist,
+               create_at,
+               nickname_update_at,
+               delete_at,
+               is_active
+        FROM `user`
+        WHERE is_active = #{isActive} LIMIT #{start}
+            , #{end};
+    </select>
+
+    <select id="getMembersByEmail" parameterType="String"
+            resultType="com.sppart.admin.main.member.domain.entity.Member">
+        SELECT email,
+               name,
+               nickname,
+               profile,
+               gender,
+               email,
+               name,
+               nickname,
+               profile,
+               gender,
+               birth_year,
+               is_artist,
+               create_at,
+               nickname_update_at,
+               delete_at,
+               is_active
+        FROM `user`
+        WHERE email like concat('%', #{email}, '%')
+          AND is_active = #{isActive} LIMIT #{start}
+            , #{end};
+    </select>
+
+    <select id="getMembersByName" parameterType="String" resultType="com.sppart.admin.main.member.domain.entity.Member">
+        SELECT email,
+               name,
+               nickname,
+               profile,
+               gender,
+               email,
+               name,
+               nickname,
+               profile,
+               gender,
+               birth_year,
+               is_artist,
+               create_at,
+               nickname_update_at,
+               delete_at,
+               is_active
+        FROM `user`
+        WHERE name like concat('%', #{name}, '%')
+          AND is_active = #{isActive} LIMIT #{start}
+            , #{end};
+    </select>
+
+    <select id="getArtisMember" parameterType="String" resultType="com.sppart.admin.main.member.domain.entity.Member">
+        SELECT email,
+               name,
+               nickname,
+               profile,
+               gender,
+               email,
+               name,
+               nickname,
+               profile,
+               gender,
+               birth_year,
+               is_artist,
+               create_at,
+               nickname_update_at,
+               delete_at,
+               is_active
+        FROM `user`
+        WHERE is_artist = 1
+          AND is_active = #{isActive} LIMIT #{start}
+            , #{end};
+    </select>
+
+    <select id="getArtistMembersByEmail" parameterType="String"
+            resultType="com.sppart.admin.main.member.domain.entity.Member">
+        SELECT email,
+               name,
+               nickname,
+               profile,
+               gender,
+               email,
+               name,
+               nickname,
+               profile,
+               gender,
+               birth_year,
+               is_artist,
+               create_at,
+               nickname_update_at,
+               delete_at,
+               is_active
+        FROM `user`
+        WHERE is_artist = 1
+          AND email like concat('%', #{email}, '%')
+          AND is_active = #{isActive} LIMIT #{start}
+            , #{end};
+    </select>
+
+    <select id="getArtistMembersByName" parameterType="String"
+            resultType="com.sppart.admin.main.member.domain.entity.Member">
+        SELECT email,
+               name,
+               nickname,
+               profile,
+               gender,
+               email,
+               name,
+               nickname,
+               profile,
+               gender,
+               birth_year,
+               is_artist,
+               create_at,
+               nickname_update_at,
+               delete_at,
+               is_active
+        FROM `user`
+        WHERE is_artist = 1
+          AND name like concat('%', #{name}, '%')
+          AND is_active = #{isActive} LIMIT #{start}
+            , #{end};
+    </select>
+
+    <select id="getMembersByDate" resultType="com.sppart.admin.main.member.domain.entity.Member">
+        SELECT email,
+               name,
+               nickname,
+               profile,
+               gender,
+               email,
+               name,
+               nickname,
+               profile,
+               gender,
+               birth_year,
+               is_artist,
+               create_at,
+               nickname_update_at,
+               delete_at,
+               is_active
+        FROM `user`
+        WHERE create_at <![CDATA[>]]> #{startDate}
+          AND create_at <![CDATA[<]]> #{endDate}
+          AND is_active = #{isActive} LIMIT #{start}
+            , #{end};
+    </select>
+
+    <select id="getMembersByDateAndEmail" resultType="com.sppart.admin.main.member.domain.entity.Member">
+        SELECT email,
+               name,
+               nickname,
+               profile,
+               gender,
+               email,
+               name,
+               nickname,
+               profile,
+               gender,
+               birth_year,
+               is_artist,
+               create_at,
+               nickname_update_at,
+               delete_at,
+               is_active
+        FROM `user`
+        WHERE create_at <![CDATA[>]]> #{startDate}
+          AND create_at <![CDATA[<]]> #{endDate}
+          AND email like concat('%', #{email}, '%')
+          AND is_active = #{isActive} LIMIT #{start}
+            , #{end};
+    </select>
+
+    <select id="getMembersByDateAndName" resultType="com.sppart.admin.main.member.domain.entity.Member">
+        SELECT email,
+               name,
+               nickname,
+               profile,
+               gender,
+               email,
+               name,
+               nickname,
+               profile,
+               gender,
+               birth_year,
+               is_artist,
+               create_at,
+               nickname_update_at,
+               delete_at,
+               is_active
+        FROM `user`
+        WHERE create_at <![CDATA[>]]> #{startDate}
+          AND create_at <![CDATA[<]]> #{endDate}
+          AND name like concat('%', #{name}, '%')
+          AND is_active = #{isActive} LIMIT #{start}
+            , #{end};
+    </select>
+
+    <select id="getArtistMembersByDate" resultType="com.sppart.admin.main.member.domain.entity.Member">
+        SELECT email,
+               name,
+               nickname,
+               profile,
+               gender,
+               email,
+               name,
+               nickname,
+               profile,
+               gender,
+               birth_year,
+               is_artist,
+               create_at,
+               nickname_update_at,
+               delete_at,
+               is_active
+        FROM `user`
+        WHERE create_at <![CDATA[>]]> #{startDate}
+          AND create_at <![CDATA[<]]> #{endDate}
+          AND is_active = #{isActive} LIMIT #{start}
+            , #{end};
+    </select>
+
+    <select id="getArtistMembersByDateAndEmail" resultType="com.sppart.admin.main.member.domain.entity.Member">
+        SELECT email,
+               name,
+               nickname,
+               profile,
+               gender,
+               email,
+               name,
+               nickname,
+               profile,
+               gender,
+               birth_year,
+               is_artist,
+               create_at,
+               nickname_update_at,
+               delete_at,
+               is_active
+        FROM `user`
+        WHERE create_at <![CDATA[>]]> #{startDate}
+          AND create_at <![CDATA[<]]> #{endDate}
+          AND email like concat('%', #{email}, '%')
+          AND is_active = #{isActive} LIMIT #{start}
+            , #{end};
+    </select>
+
+    <select id="getArtistMembersByDateAndName" resultType="com.sppart.admin.main.member.domain.entity.Member">
+        SELECT email,
+               name,
+               nickname,
+               profile,
+               gender,
+               email,
+               name,
+               nickname,
+               profile,
+               gender,
+               birth_year,
+               is_artist,
+               create_at,
+               nickname_update_at,
+               delete_at,
+               is_active
+        FROM `user`
+        WHERE create_at <![CDATA[>]]> #{startDate}
+          AND create_at <![CDATA[<]]> #{endDate}
+          AND name like concat('%', #{email}, '%')
+          AND is_active = #{isActive} LIMIT #{start}
+            , #{end};
+    </select>
+
+    <select id="getMemberByEmail" parameterType="String" resultType="com.sppart.admin.main.member.domain.entity.Member">
+        SELECT email,
+               name,
+               nickname,
+               profile,
+               gender,
+               email,
+               name,
+               nickname,
+               profile,
+               gender,
+               birth_year,
+               is_artist,
+               create_at,
+               nickname_update_at,
+               delete_at,
+               is_active
+        FROM `user`
+        WHERE email = #{email}
+          AND is_active = #{isActive};
+    </select>
+
+    <delete id="deleteMemberByEmail" parameterType="String">
+        DELETE
+        FROM `user`
+        WHERE email = #{email};
+    </delete>
+
+    <update id="updateUserNicknameByEmail">
+        UPDATE `user`
+        SET nickname = #{nickname}
+        WHERE email = #{email}
+    </update>
+
+    <update id="updateUserGenderByEmail">
+        UPDATE `user`
+        SET gender = #{gender}
+        WHERE email = #{email}
+    </update>
+
+    <update id="updateUserBirthByEmail">
+        UPDATE `user`
+        SET birth_year = #{birth}
+        WHERE email = #{email}
+    </update>
+
+    <update id="updateUserProfileByEmail">
+        UPDATE `user`
+        SET profile = #{profile}
+        WHERE email = #{email}
+    </update>
+
+    <select id="isDuplicateName" parameterType="String" resultType="boolean">
+        SELECT EXISTS(SELECT nickname FROM `user` WHERE nickname = #{name});
+    </select>
+</mapper>

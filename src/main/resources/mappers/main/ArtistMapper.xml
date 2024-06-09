@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sppart.admin.main.artist.domain.mapper.ArtistMapper">
+    <select id="isExistArtist" resultType="boolean">
+        SELECT EXISTS(SELECT name FROM artist WHERE instagram_id = #{instagramId} AND name = #{name});
+    </select>
+
+    <select id="getArtistByInstagramId" parameterType="String"
+            resultType="com.sppart.admin.main.artist.domain.entity.Artist">
+        SELECT name, profile, introduce, description, instagram_id, is_display, view, is_about, collaboration_date
+        FROM artist
+        WHERE instagram_id = #{instagramId};
+    </select>
+
+    <select id="getArtistsByDate" resultType="com.sppart.admin.main.artist.domain.entity.Artist">
+        SELECT name, profile, introduce, description, instagram_id, is_display, view, is_about, collaboration_date
+        FROM artist
+        WHERE collaboration_date <![CDATA[>]]> #{startDate}
+          AND collaboration_date <![CDATA[<]]> #{endDate}
+            LIMIT #{start}
+            , #{end};
+    </select>
+
+    <select id="getAllArtists" resultType="com.sppart.admin.main.artist.domain.entity.Artist">
+        SELECT name, profile, introduce, description, instagram_id, is_display, view, is_about, collaboration_date
+        FROM artist
+            LIMIT #{start}, #{end};
+    </select>
+
+    <select id="getArtistsByDateAndInstagramId" resultType="com.sppart.admin.main.artist.domain.entity.Artist">
+        SELECT name, profile, introduce, description, instagram_id, is_display, view, is_about, collaboration_date
+        FROM artist
+        WHERE instagram_id like concat('%'
+            , #{instagramId}
+            , '%')
+          AND collaboration_date <![CDATA[>]]> #{startDate}
+          AND collaboration_date <![CDATA[<]]> #{endDate}
+            LIMIT #{start}
+            , #{end};
+    </select>
+
+    <select id="getArtistsByInstagramId" resultType="com.sppart.admin.main.artist.domain.entity.Artist">
+        SELECT name, profile, introduce, description, instagram_id, is_display, view, is_about, collaboration_date
+        FROM artist
+        WHERE instagram_id like concat('%'
+            , #{instagramId}
+            , '%')
+            LIMIT #{start}
+            , #{end};
+    </select>
+
+    <select id="getArtistsByDateAndName" resultType="com.sppart.admin.main.artist.domain.entity.Artist">
+        SELECT name, profile, introduce, description, instagram_id, is_display, view, is_about, collaboration_date
+        FROM artist
+        WHERE name like concat('%'
+            , #{name}
+            , '%')
+          AND collaboration_date <![CDATA[>]]> #{startDate}
+          AND collaboration_date <![CDATA[<]]> #{endDate}
+            LIMIT #{start}
+            , #{end};
+    </select>
+
+    <select id="getArtistsByName" resultType="com.sppart.admin.main.artist.domain.entity.Artist">
+        SELECT name, profile, introduce, description, instagram_id, is_display, view, is_about, collaboration_date
+        FROM artist
+        WHERE name like concat('%'
+            , #{name}
+            , '%')
+            LIMIT #{start}
+            , #{end};
+    </select>
+
+    <update id="updateNameByInstagramId" parameterType="String">
+        UPDATE artist
+        SET name = #{name}
+        WHERE instagram_id = #{instagramId};
+    </update>
+
+    <update id="updateIntroduceByInstagramId" parameterType="String">
+        UPDATE artist
+        SET introduce = #{introduce}
+        WHERE instagram_id = #{instagramId};
+    </update>
+
+    <update id="updateDescriptionByInstagramId" parameterType="String">
+        UPDATE artist
+        SET description = #{description}
+        WHERE instagram_id = #{instagramId};
+    </update>
+
+    <update id="updateProfileByInstagramId" parameterType="String">
+        UPDATE artist
+        SET profile = #{profile}
+        WHERE instagram_id = #{instagramId};
+    </update>
+
+    <insert id="insertArtist" parameterType="com.sppart.admin.main.artist.domain.entity.Artist">
+        INSERT INTO artist(name, profile, introduce, description, instagram_id, is_display, collaboration_date)
+        VALUES (#{name}, #{profile}, #{introduce}, #{description}, #{instagramId}, #{isDisplay}, #{collaborationDate});
+    </insert>
+
+    <delete id="deleteArtist" parameterType="String">
+        DELETE
+        FROM artist
+        WHERE instagram_id = #{instagramId};
+    </delete>
+</mapper>

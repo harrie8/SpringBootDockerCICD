@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sppart.admin.main.pictureinfo.domain.mapper.PictureInfoMapper">
+
+    <insert id="saveBy">
+        INSERT INTO picture_info(product_id, type, size, `year`)
+        VALUES (#{productId}, #{req.type}, #{req.size}, #{req.year});
+    </insert>
+
+    <delete id="bulkDeleteByProductIds">
+        <if test="productIds != null and !productIds.isEmpty()">
+            DELETE
+            FROM picture_info
+            <where>
+                AND product_id IN
+                <foreach collection="productIds" item="productId" open="(" separator="," close=")">
+                    #{productId}
+                </foreach>
+            </where>
+        </if>
+    </delete>
+
+    <delete id="deleteByProductId" parameterType="Long">
+        DELETE
+        FROM picture_info AS pi
+        WHERE pi.product_id = #{productId};
+    </delete>
+</mapper>

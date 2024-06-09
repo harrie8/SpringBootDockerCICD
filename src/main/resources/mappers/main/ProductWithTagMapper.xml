@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sppart.admin.main.productwithtag.domain.mapper.ProductWithTagMapper">
+
+    <delete id="bulkDeleteByProductIds">
+        <if test="ids != null and !ids.isEmpty()">
+            DELETE
+            FROM product_with_tag
+            <where>
+                AND product_id IN
+                <foreach collection="ids" item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </where>
+        </if>
+    </delete>
+
+    <insert id="saveBy">
+        <if test="productId != null and tagIds != null and !tagIds.isEmpty()">
+            INSERT INTO product_with_tag(product_id, tag_id)
+            VALUES
+            <foreach collection="tagIds" item="tagId" open="(" close=")" separator="), (">
+                #{productId}, #{tagId}
+            </foreach>
+        </if>
+    </insert>
+
+    <delete id="deleteByProductId" parameterType="Long">
+        DELETE
+        FROM product_with_tag AS pwi
+        WHERE pwi.product_id = #{productId};
+    </delete>
+</mapper>

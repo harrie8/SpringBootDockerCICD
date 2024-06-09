@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sppart.admin.main.like.domain.mapper.LikeMapper">
+    <select id="getTotalCountByProductId" resultType="int">
+        SELECT COUNT(*)
+        FROM `like`
+        WHERE product_id = #{productId};
+    </select>
+
+    <select id="getLikesByProductId" resultType="com.sppart.admin.main.like.dto.LikeWithUser">
+        SELECT li.product_id AS productId,
+               li.user_id    AS userEmail,
+               us.nickname   AS userNickname
+        FROM `like` AS li
+                 JOIN `user` AS us ON us.email = li.user_id
+        WHERE li.product_id = #{productId} LIMIT #{offset}
+            , #{limit};
+    </select>
+</mapper>
