@@ -73,10 +73,10 @@ jobs:
           envs: DOCKER_USERNAME, DOCKER_PASSWORD, DOCKER_REPO
           script: |
             echo "Logging into Docker..."
-            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            echo $DOCKER_PASSWORD | sudo docker login --username $DOCKER_USERNAME --password-stdin
             if [ $? -ne 0 ]; then
               echo "Docker login failed"
               exit 1
             fi
             echo "Docker login succeeded"
-            docker pull ${{ secrets.DOCKER_REPO }}
+            docker pull $DOCKER_REPO
