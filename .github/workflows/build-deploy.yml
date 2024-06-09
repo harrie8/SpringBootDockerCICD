@@ -62,8 +62,14 @@ jobs:
           password: ${{ secrets.NCP_PASSWORD }}
           port: ${{ secrets.NCP_PORT }}
           script: |
-            docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
-            docker pull ${DOCKER_REPO}
+            echo "Logging into Docker..."
+            docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
+             if [ $? -ne 0 ]; then
+              echo "Docker login failed"
+              exit 1
+            fi
+            echo "Docker login succeeded"
+            docker pull "${DOCKER_REPO}"
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
