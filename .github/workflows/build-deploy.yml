@@ -63,7 +63,7 @@ jobs:
           port: ${{ secrets.NCP_PORT }}
           script: |
             echo "Logging into Docker..."
-            docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
+            echo "${DOCKER_PASSWORD}" | sudo docker login -u "${DOCKER_USERNAME}" --password-stdin
              if [ $? -ne 0 ]; then
               echo "Docker login failed"
               exit 1
