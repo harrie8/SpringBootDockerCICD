@@ -49,12 +49,10 @@ jobs:
 
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
-        id: deploy
         with:
-          host: ${{ secrets.REMOTE_IP }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.REMOTE_IP }}
           username: ${{ secrets.USER }}
-          envs: GITHUB_SHA
           script: |
             cd /root/cicdTest/
             mkdir test
