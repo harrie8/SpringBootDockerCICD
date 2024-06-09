@@ -46,3 +46,19 @@ jobs:
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }} .
           docker push ${{ secrets.DOCKER_REPO }}
+
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master
+        id: deploy
+        with:
+          host: ${{ secrets.REMOTE_IP }}
+          key: ${{ secretes.SSH_PRIVATE_KEY }}
+          username: ${{ secrets.USER }}
+          envs: GITHUB_SHA
+        script: |
+          cd /root/cicdTest/
+          mkdir test
+#          sudo docker rm -f $(docker ps -qa)
+          sudo docker pull ${{ secrets.DOCKER_REPO }}
+#          docker-compose up -d
+#          docker image prune -f
