@@ -70,6 +70,7 @@ jobs:
           username: ${{ secrets.NCP_USER }}
           password: ${{ secrets.NCP_PASSWORD }}
           port: ${{ secrets.NCP_PORT }}
+          envs: DOCKER_USERNAME, DOCKER_PASSWORD, DOCKER_REPO
           script: |
             echo "Logging into Docker..."
             echo $DOCKER_PASSWORD | sudo docker login --username $DOCKER_USERNAME --password-stdin
