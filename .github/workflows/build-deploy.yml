@@ -54,6 +54,11 @@ jobs:
       - name: DockerHub Push
         run: docker push ${{ secrets.DOCKER_REPO }}
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
         with:
@@ -63,13 +68,13 @@ jobs:
           port: ${{ secrets.NCP_PORT }}
           script: |
             echo "Logging into Docker..."
-            echo $DOCKER_PASSWORD | sudo docker login --username $DOCKER_USERNAME --password-stdin
+            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             if [ $? -ne 0 ]; then
               echo "Docker login failed"
               exit 1
             fi
             echo "Docker login succeeded"
-            docker pull $DOCKER_REPO
+            docker pull ${{ secrets.DOCKER_REPO }}
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
