@@ -50,10 +50,10 @@ jobs:
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
         with:
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          host: ${{ secrets.REMOTE_IP }}
-          username: ${{ secrets.USER }}
-          port: ${{ secrets.PORT }}
+          host: ${{ secrets.NCP_REMOTE_IP }}
+          username: ${{ secrets.NCP_USER }}
+          password: ${{ secrets.NCP_PASSWORD }}
+          port: ${{ secrets.NCP_PORT }}
           script: |
             cd /root/cicdTest/
             mkdir test
