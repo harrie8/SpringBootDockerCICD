@@ -1,0 +1,49 @@
+spring:
+  profiles:
+    group:
+      dev: default, common
+      test: test-profile, common
+---
+spring:
+  config:
+    activate:
+      on-profile: default
+  datasource:
+    #MySQL DB Setting
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: # url
+    username: root
+    password: #비밀번호
+---
+spring:
+  config:
+    activate:
+      on-profile: test-profile
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySQL;NON_KEYWORDS=USER
+    driver-class-name: org.h2.Driver
+---
+spring:
+  config:
+    activate:
+      on-profile: common
+  #Swagger
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  #devtools
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+
+# Mapper Xml Location
+mybatis:
+  mapper-locations: classpath:mappers/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
