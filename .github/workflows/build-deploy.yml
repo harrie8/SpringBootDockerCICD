@@ -73,4 +73,4 @@ jobs:
           envs: DOCKER_USERNAME, DOCKER_PASSWORD, DOCKER_REPO
           script: |
             cd /root/cicdTest/
-            echo "hello" | base64 --decode > deploy.sh
+            echo "hello" > deploy.sh
