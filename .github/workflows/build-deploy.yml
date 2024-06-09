@@ -1,4 +1,4 @@
-name: Build and Deploy Spring Boot to NCP
+name: Build and Deploy Spring Boot to NCP With Docker
 
 on:
   push:
@@ -61,16 +61,11 @@ jobs:
     steps:
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          DOCKER_REPO: ${{ secrets.DOCKER_REPO }}
         with:
           host: ${{ secrets.NCP_REMOTE_IP }}
           username: ${{ secrets.NCP_USER }}
           password: ${{ secrets.NCP_PASSWORD }}
           port: ${{ secrets.NCP_PORT }}
-          envs: DOCKER_USERNAME, DOCKER_PASSWORD, DOCKER_REPO
           script: |
             cd /root/cicdTest/
             echo "${{ secrets.DOCKER_COMPOSE_ENV_FILE }}" > .env
