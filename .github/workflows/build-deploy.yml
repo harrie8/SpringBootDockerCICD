@@ -60,7 +60,7 @@ jobs:
 
     steps:
       - name: Deploy to Server
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v0.1.8
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -73,10 +73,10 @@ jobs:
           envs: DOCKER_USERNAME, DOCKER_PASSWORD, DOCKER_REPO
           script: |
             echo "Logging into Docker..."
-            echo $DOCKER_PASSWORD | sudo docker login --username $DOCKER_USERNAME --password-stdin
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             if [ $? -ne 0 ]; then
               echo "Docker login failed"
               exit 1
             fi
             echo "Docker login succeeded"
-            docker pull $DOCKER_REPO
+            docker pull ${{ secrets.DOCKER_REPO }}
