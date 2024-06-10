@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import javax.servlet.http.Cookie;
 
 @Slf4j
 @Service
@@ -59,16 +58,5 @@ public class UserServiceImpl implements UserService {
                 .build();
         session.setAttribute(SessionConst.LOGIN_USER, accessor);
         session.setMaxInactiveInterval(SessionConst.DEFAULT_TIME_OUT_SECONDS);
-
-        // 직접 쿠키를 생성하여 SameSite 속성 설정
-        Cookie cookie = new Cookie("SESSIONID", session.getId());
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true); // HTTPS에서만 전송
-        cookie.setPath("/");
-        cookie.setMaxAge(SessionConst.DEFAULT_TIME_OUT_SECONDS);
-        cookie.setDomain("yourdomain.com"); // 필요한 경우 도메인 설정
-        cookie.setSameSite("None"); // SameSite 속성 설정
-    
-        httpServletResponse.addCookie(cookie);
     }
 }
