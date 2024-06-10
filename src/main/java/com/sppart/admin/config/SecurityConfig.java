@@ -44,6 +44,7 @@ public class SecurityConfig {
 
                 .and().authorizeHttpRequests()
                 .antMatchers("/users/login").permitAll()
+                .antMatchers("/cookie/test").permitAll()
 //                .antMatchers("/users/password").hasAuthority("MANAGE_PW") // 권한 확인
 //                .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
