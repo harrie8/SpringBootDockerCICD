@@ -8,11 +8,13 @@ import lombok.Getter;
 public class LoginResponse {
 
     private final Users userInfo;
+    private final String accessToken;
     private final String message;
 
     @Builder
-    public LoginResponse(Users userInfo, String message) {
+    public LoginResponse(Users userInfo, String accessToken, String message) {
         this.userInfo = userInfo;
+        this.accessToken = accessToken;
         this.message = message;
     }
 }

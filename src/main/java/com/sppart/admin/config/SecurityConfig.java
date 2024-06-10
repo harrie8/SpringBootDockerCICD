@@ -3,6 +3,7 @@ package com.sppart.admin.config;
 import com.sppart.admin.filter.CustomAccessDeniedHandler;
 import com.sppart.admin.filter.CustomUsernamePasswordAuthenticationFilter;
 import com.sppart.admin.filter.CustomeAuthenticationEntryPoint;
+import com.sppart.admin.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final JwtProvider jwtProvider;
     private final CustomeAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
@@ -44,7 +46,6 @@ public class SecurityConfig {
 
                 .and().authorizeHttpRequests()
                 .antMatchers("/users/login").permitAll()
-                .antMatchers("/cookie/test").permitAll()
 //                .antMatchers("/users/password").hasAuthority("MANAGE_PW") // 권한 확인
 //                .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
@@ -54,7 +55,7 @@ public class SecurityConfig {
                 .authenticationEntryPoint(customAuthenticationEntryPoint)
                 .accessDeniedHandler(customAccessDeniedHandler)
                 .and()
-                .addFilterBefore(new CustomUsernamePasswordAuthenticationFilter(),
+                .addFilterBefore(new CustomUsernamePasswordAuthenticationFilter(jwtProvider),
                         UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

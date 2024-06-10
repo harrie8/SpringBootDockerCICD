@@ -1,27 +1,31 @@
 package com.sppart.admin.filter;
 
-import com.sppart.admin.sub.user.domain.Accessor;
-import com.sppart.admin.utils.SessionConst;
+import com.sppart.admin.jwt.JwtProvider;
+import com.sppart.admin.utils.JwtUtils;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import java.io.IOException;
 import java.util.Arrays;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class CustomUsernamePasswordAuthenticationFilter extends OncePerRequestFilter {
+
+    private final JwtProvider jwtProvider;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
@@ -34,52 +38,39 @@ public class CustomUsernamePasswordAuthenticationFilter extends OncePerRequestFi
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        String jwt = resolveToken(request);
+
         try {
-            HttpSession session = getHttpSession(request);
-            Accessor accessor = getAccessor(request, session);
-            setAuthentication(accessor);
-        } catch (IllegalStateException e) {
-            log.error("세션 오류");
+            if (StringUtils.hasText(jwt) && jwtProvider.validateToken(jwt)) {
+                Authentication authentication = jwtProvider.getAuthentication(jwt);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+
+            filterChain.doFilter(request, response);
+        } catch (SecurityException | MalformedJwtException | SignatureException e) {
+            log.error("서명 혹은 구조가 잘못된 JWT");
+            sendErrorResponse(response, 400, "구조가 잘못된 토큰입니다.");
+        } catch (ExpiredJwtException e) {
+            log.error("유효 기간이 만료된 토큰");
+            sendErrorResponse(response, 401, "유효 기간이 만료된 토큰입니다.");
+        } catch (UnsupportedJwtException e) {
+            log.error("지원하는 형식과 일치하지 않는 토큰");
+            sendErrorResponse(response, 400, "지원하는 형식과 다른 토큰입니다.");
+        } catch (IllegalArgumentException e) {
+            log.error("Claims가 비어있는 토큰");
+            sendErrorResponse(response, 400, "값이 비어있는 토큰입니다.");
         }
-
-        filterChain.doFilter(request, response);
     }
 
-    private HttpSession getHttpSession(HttpServletRequest request) throws IllegalStateException {
-        HttpSession session = request.getSession(false);
-        if (isEmptySession(session)) {
-            log.error("세션이 비어 있는 오류");
-            throw new IllegalStateException();
+    private String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(JwtUtils.AUTHORIZATION_HEADER);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(JwtUtils.BEARER_PREFIX)) {
+            return bearerToken.substring(7);
         }
-        return session;
+        return null;
     }
 
-    private boolean isEmptySession(HttpSession session) {
-        return session == null;
-    }
-
-    private Accessor getAccessor(HttpServletRequest request, HttpSession session) throws IllegalStateException {
-        Object sessionAttribute = session.getAttribute(SessionConst.LOGIN_USER);
-        if (!(sessionAttribute instanceof Accessor accessor)) {
-            printCookie(request);
-            log.error("세션에 Accessor 객체가 아닌 {} 값이 설정되어 있음", sessionAttribute);
-            throw new IllegalStateException();
-        }
-        return accessor;
-    }
-
-    private void printCookie(HttpServletRequest request) {
-        Arrays.stream(request.getCookies())
-                .filter(cookie -> cookie.getName().equals("JSESSIONID"))
-                .findFirst()
-                .ifPresent(cookie -> log.info("cookie.getName() = {}, cookie.getValue() = {}", cookie.getName(),
-                        cookie.getValue()));
-    }
-
-    private void setAuthentication(Accessor accessor) {
-        UserDetails principal = new User(accessor.getId(), "", accessor.getGrantedAuthorities());
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                principal, "", accessor.getRole().getGrantedAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+    private void sendErrorResponse(HttpServletResponse response, int sc, String msg) throws IOException {
+        response.sendError(sc, msg);
     }
 }
