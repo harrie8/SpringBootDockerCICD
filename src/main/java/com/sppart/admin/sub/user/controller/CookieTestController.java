@@ -1,25 +1,28 @@
 package com.sppart.admin.sub.user.controller;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class CookieTestController {
+    
+    @PostMapping("/cookie/test")
+    public ResponseEntity<Void> getMyMain() {
+        ResponseCookie cookie = ResponseCookie
+                .from("MYSESSIONID", "test")
+                .maxAge(7 * 24 * 60 * 60)
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("Strict")
+                .path("/")
+                .domain("localhost")
+                .build();
 
-    @GetMapping("/cookie/test")
-    public String cookieTest(HttpServletResponse response) {
-        Cookie cookie = new Cookie("myCookie", "myCookieValue");
-
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setMaxAge(7 * 24 * 60 * 60);
-
-        // SameSite=None 설정 추가
-        response.addHeader("Set-Cookie", String.format("%s; SameSite=None; Secure", cookie.toString()));
-
-        return "Cookie is set";
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .build();
     }
 }
