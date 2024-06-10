@@ -1,8 +1,8 @@
 package com.sppart.admin.resolver;
 
+import com.sppart.admin.exception.CommonErrorCode;
 import com.sppart.admin.exception.SuperpositionAdminException;
 import com.sppart.admin.sub.user.dto.CurrentUser;
-import com.sppart.admin.utils.SessionErrorCode;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,7 +14,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
-public class SessionArgumentResolver implements HandlerMethodArgumentResolver {
+public class JwtArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -27,7 +27,7 @@ public class SessionArgumentResolver implements HandlerMethodArgumentResolver {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String id = authentication.getName();
         if (!StringUtils.hasText(id)) {
-            throw new SuperpositionAdminException(SessionErrorCode.INVALID_SESSION_VALUE);
+            throw new SuperpositionAdminException(CommonErrorCode.UNAUTHORIZED);
         }
         return id;
     }

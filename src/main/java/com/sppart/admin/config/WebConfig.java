@@ -1,7 +1,7 @@
 package com.sppart.admin.config;
 
+import com.sppart.admin.resolver.JwtArgumentResolver;
 import com.sppart.admin.resolver.PageableVerificationArgumentResolver;
-import com.sppart.admin.resolver.SessionArgumentResolver;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +21,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Value("${cors.allowedOrigins}")
     private String[] allowedOrigins;
 
-    private final SessionArgumentResolver jwtArgumentResolver;
+    private final JwtArgumentResolver jwtArgumentResolver;
     private final PageableVerificationArgumentResolver pageableVerificationArgumentResolver;
 
     @Override
